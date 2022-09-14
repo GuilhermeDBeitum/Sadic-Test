@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  node:
+    image: node:12
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./:/srv/app
+    working_dir: /srv/app
+    command: 'npm run serve'
