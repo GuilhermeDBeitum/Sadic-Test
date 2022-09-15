@@ -1,7 +1,6 @@
 import Axios from "axios";
 import Vue from "vue";
 import Vuex from "vuex";
-
 Vue.use(Vuex);
 
 const moduleLogin = {
@@ -41,9 +40,33 @@ const moduleLogin = {
   },
 };
 
+const moduleJoke = {
+  state: { joke: null },
+  getters: {
+    joke: (state) => {
+      return state.joke;
+    },
+  },
+  actions: {
+    async listJoke({ state }) {
+      Axios
+        .get("https://geek-jokes.sameerkumar.website/api?format=json")
+        .then((response) => {
+          state.joke = response.data.joke;
+        })
+        .catch(() => {
+          Vue.toasted.error(
+            "Algo está errado e já estamos resolvendo, tente novamente mais tarde!"
+          );
+        });
+    },
+  },
+};
+
 const store = new Vuex.Store({
   modules: {
     modlogin: moduleLogin,
+    modjoke: moduleJoke,
   },
 });
 

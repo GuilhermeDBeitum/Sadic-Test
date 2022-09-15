@@ -4,12 +4,12 @@
       <v-card height="100%">
         <v-row align="center" justify="space-around">
           <v-col class="text-center" cols="8" sm="4">
-            <h1>😐 Vamos iniciar?</h1>
-            <p>Click para continuar</p>
+            <h1>😞 Estou 100% Triste</h1>
+            <h2>Preciso ler piadas para ficar feliz!</h2>
+            <p>Click para iniciar</p>
           </v-col>
         </v-row>
       </v-card>
-      <router-view></router-view>
     </v-container>
   </v-card>
 </template>
@@ -24,7 +24,7 @@ export default {
 
   methods: {
     changeRouter() {
-      this.$router.push({ name: "triste" });
+      this.$router.push({ name: "poker-face" });
     },
   },
 };

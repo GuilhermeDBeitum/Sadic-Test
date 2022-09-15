@@ -4,19 +4,19 @@
       <v-card height="100%">
         <v-row align="center" justify="space-around">
           <v-col class="text-center" cols="8" sm="4">
-            <h1>😐 Vamos iniciar?</h1>
-            <p>Click para continuar</p>
+            <h1>🤩 100% Feliz</h1>
+            <h2>Agora estou muito feliz!</h2>
+            <p>Click para reiniciar</p>
           </v-col>
         </v-row>
       </v-card>
-      <router-view></router-view>
     </v-container>
   </v-card>
 </template>
 
 <script>
 export default {
-  name: `InitialView`,
+  name: `HappyView`,
 
   data() {
     return {};
@@ -24,7 +24,7 @@ export default {
 
   methods: {
     changeRouter() {
-      this.$router.push({ name: "triste" });
+      this.$router.push({ name: "inicial" });
     },
   },
 };
