@@ -80,8 +80,8 @@ export default {
     valid: true,
     bar: false,
     show1: false,
-    vlogin: null,
-    vpassword: null,
+    vlogin: "",
+    vpassword: "",
     rules: {
       characters: (value) => value.length >= 8 || "Min 8 caracteres.",
       email: (value) => {
