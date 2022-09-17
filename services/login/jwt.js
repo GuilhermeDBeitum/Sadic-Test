@@ -2,6 +2,7 @@ const http = require('http');
 const express = require('express');
 const app = express();
 
+
 require("dotenv-safe").config();
 const jwt = require('jsonwebtoken');
 
@@ -11,6 +12,10 @@ app.use(bodyParser.json());
 const server = http.createServer(app);
 server.listen(3000);
 console.log("Servidor escutando na porta 3000...")
+
+
+
+
 
 
 app.post('/login', (req, res) => {

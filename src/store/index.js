@@ -1,8 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import moduleLogin from "./login";
-import moduleJoke from "./joke";
+import moduleLogin from "./login/login.js";
+import moduleJoke from "./joke/joke.js";
 
 Vue.use(Vuex);
 
