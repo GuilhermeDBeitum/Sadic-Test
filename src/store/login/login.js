@@ -1,17 +1,20 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import Axios from "axios";
+import axios from "axios";
 
 Vue.use(Vuex);
 
 const moduleLogin = {
-    state: { login: null, password: null },
+    state: { login: "", password: "", token: "" },
     getters: {
         login: (state) => {
             return state.login;
         },
         password: (state) => {
             return state.password;
+        },
+        token: (state) => {
+            return state.token;
         },
     },
     mutations: {
@@ -21,23 +24,34 @@ const moduleLogin = {
         setPassword(state, password) {
             state.password = password;
         },
+        setToken(state, token) {
+            state.token = token;
+        },
     },
     actions: {
-        async initializeLogin({ state }) {
-
-            let token = ''
-
-            Axios
-                .get("http://localhost:3000/login", {
-                    headers: {
-                        'x-access-token': token
-                    },
+        async generateToken({ state }) {
+            axios.post("http://localhost:3000/login", {
+                login: state.login,
+                password: state.password
+            })
+                .then(function (response) {
+                    state.token = response.data.token
                 })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        async initializeLogin({ state }) {
+            axios.get("http://localhost:3000/login", {
+                headers: {
+                    'x-access-token': state.token
+                },
+            })
                 .then((response) => {
                     state.login = response.data[0].login;
                     state.password = response.data[0].password;
                 })
-                .catch((error) => {
+                .catch(function (error) {
                     console.log(error);
                 });
         },

@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import Api from "/services/api";
+import Api from "../../../services/joke/api";
 
 Vue.use(Vuex);
 

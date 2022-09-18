@@ -92,8 +92,36 @@ export default {
     },
   }),
 
+  computed: {
+    login: {
+      get() {
+        return this.$store.state.vlogin;
+      },
+
+      set(newLogin) {
+        this.$store.commit("setLogin", newLogin);
+      },
+    },
+
+    password: {
+      get() {
+        return this.$store.state.vpassword;
+      },
+
+      set(newPassword) {
+        this.$store.commit("setPassword", newPassword);
+      },
+    },
+  },
+
   methods: {
     validateLogin() {
+      this.login = this.vlogin;
+      this.password = this.vpassword;
+      this.generateToken();
+      setTimeout(() => {
+        this.initializeLogin();
+      }, 100);
       if (this.$refs.form.validate()) {
         if (
           this.vlogin === this.$store.state.modlogin.login &&
@@ -108,13 +136,13 @@ export default {
       await this.$store.dispatch("initializeLogin");
     },
 
+    async generateToken() {
+      await this.$store.dispatch("generateToken");
+    },
+
     validate() {
       this.bar = true;
     },
-  },
-
-  created() {
-    this.initializeLogin();
   },
 };
 </script>

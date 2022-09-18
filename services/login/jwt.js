@@ -2,7 +2,6 @@ const http = require('http');
 const express = require('express');
 const app = express();
 
-
 require("dotenv-safe").config();
 const jwt = require('jsonwebtoken');
 
@@ -14,30 +13,49 @@ server.listen(3000);
 console.log("Servidor escutando na porta 3000...")
 
 
+const sqlite3 = require('sqlite3');
+
+const db = new sqlite3.Database('./database.sqlite', (error) => {
+    if (error) console.log(error);
+});
+
+db.serialize(() => {
+    db.run('create table if not exists user (id integer primary key, login text, password text)', (error) => {
+        if (error) console.log(error);
+    });
+
+    db.run('insert into user (login, password) values (?, ?)', ['admin@admin.com', 'admin123'], (error) => {
+        if (error) console.log(error);
+    });
+
+});
 
 
-
-
-app.post('/login', (req, res) => {
-    if (req.body.login === 'admin@admin.com' && req.body.password === 'admin123') {
-        const id = 1;
-        const token = jwt.sign({ id }, process.env.SECRET, {
-            expiresIn: 300
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+db.all('select * from user', (error, rows, next) => {
+    let db = rows;
+    app.post('/login', urlencodedParser, (req, res, next) => {
+        db.forEach((user) => {
+            req.body.login === user.login && req.body.password === user.password ?
+                res.json({ auth: true, token: jwt.sign(user.id, process.env.SECRET) })
+                :
+                res.status(500).json({ message: 'Login inválido!' });
         });
-        return res.json({ auth: true, token: token });
-    }
+        next();
+    });
+});
 
-    res.status(500).json({ message: 'Login inválido!' });
-})
-
+db.all('select * from user', (error, rows) => {
+    let db = rows;
+    db.forEach((user) => {
+        app.get('/login', verifyJWT, (req, res) => {
+            res.json([{ id: user.id, login: user.login, password: user.password }]);
+        });
+    })
+});
 
 app.post('/logout', function (req, res) {
     res.json({ auth: false, token: null });
-})
-
-
-app.get('/login', verifyJWT, (req, res) => {
-    res.json([{ id: 1, login: 'admin@admin.com', password: 'admin123' }]);
 })
 
 function verifyJWT(req, res, next) {
@@ -52,4 +70,4 @@ function verifyJWT(req, res, next) {
     });
 }
 
-
+db.close();
