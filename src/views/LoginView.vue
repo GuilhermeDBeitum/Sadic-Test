@@ -11,7 +11,7 @@
               color="green"
               filled
               autocomplete="off"
-              v-model="vlogin"
+              v-model="vLogin"
               :rules="[rules.email]"
               label="E-mail"
               :prepend-icon="'mdi-account'"
@@ -20,7 +20,7 @@
               color="green"
               autocomplete="off"
               filled
-              v-model="vpassword"
+              v-model="vPassword"
               label="Senha"
               :type="show1 ? 'text' : 'password'"
               :rules="[rules.characters]"
@@ -41,10 +41,7 @@
             <v-btn
               class="ma-2 white--text"
               color="green"
-              @click="
-                validate();
-                validateLogin();
-              "
+              @click="initializeLogin()"
               >Login</v-btn
             >
           </router-link>
@@ -72,6 +69,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: `LoginView`,
   data: () => ({
@@ -80,8 +78,9 @@ export default {
     valid: true,
     bar: false,
     show1: false,
-    vlogin: "",
-    vpassword: "",
+    vLogin: "",
+    vPassword: "",
+    session: "",
     rules: {
       characters: (value) => value.length >= 8 || "Min 8 caracteres.",
       email: (value) => {
@@ -92,57 +91,79 @@ export default {
     },
   }),
 
+  watch: {
+    vLogin: function (newLogin) {
+      this.login = newLogin;
+    },
+
+    vPassword: function (newPassword) {
+      this.password = newPassword;
+    },
+  },
+
   computed: {
+    ...mapState({
+      token: (state) => state.modlogin.token,
+    }),
+
     login: {
       get() {
-        return this.$store.state.vlogin;
+        return this.$store.state.vLogin;
       },
 
       set(newLogin) {
-        this.$store.commit("setLogin", newLogin);
+        this.$store.commit("SET_LOGIN", newLogin);
       },
     },
 
     password: {
       get() {
-        return this.$store.state.vpassword;
+        return this.$store.state.vPassword;
       },
 
       set(newPassword) {
-        this.$store.commit("setPassword", newPassword);
+        this.$store.commit("SET_PASSWORD", newPassword);
       },
     },
   },
 
   methods: {
-    validateLogin() {
-      this.login = this.vlogin;
-      this.password = this.vpassword;
-      this.generateToken();
-      setTimeout(() => {
-        this.initializeLogin();
-      }, 100);
-      if (this.$refs.form.validate()) {
-        if (
-          this.vlogin === this.$store.state.modlogin.login &&
-          this.vpassword === this.$store.state.modlogin.password
-        ) {
-          this.rota = "inicial";
-        }
-      }
-    },
-
     async initializeLogin() {
-      await this.$store.dispatch("initializeLogin");
+      await this.generateToken();
+      this.validateLogin();
     },
 
     async generateToken() {
       await this.$store.dispatch("generateToken");
     },
 
+    validateLogin() {
+      if (this.$refs.form.validate()) {
+        if (this.token) {
+          this.session = "sessionStarted";
+          localStorage.setItem("session", this.session);
+          this.$router.push({ name: "inicial" });
+        } else {
+          this.bar = true;
+        }
+      }
+    },
+
+    validSession() {
+      if (
+        window.localStorage.getItem("tokenCached") &&
+        window.localStorage.getItem("session") === "sessionStarted"
+      ) {
+        this.$router.push({ name: "inicial" });
+      }
+    },
+
     validate() {
       this.bar = true;
     },
+  },
+  mounted() {
+    this.validSession();
   },
 };
 </script>

@@ -4,6 +4,10 @@ import axios from "axios";
 
 Vue.use(Vuex);
 
+const SET_LOGIN = "SET_LOGIN";
+const SET_PASSWORD = "SET_PASSWORD";
+const SET_TOKEN = "SET_TOKEN";
+
 const moduleLogin = {
     state: { login: "", password: "", token: "" },
     getters: {
@@ -18,38 +22,25 @@ const moduleLogin = {
         },
     },
     mutations: {
-        setLogin(state, login) {
+        [SET_LOGIN](state, login) {
             state.login = login;
         },
-        setPassword(state, password) {
+        [SET_PASSWORD](state, password) {
             state.password = password;
         },
-        setToken(state, token) {
-            state.token = token;
+        [SET_TOKEN](state, token) {
+            state.token = token
+            localStorage.setItem("tokenCached", token)
         },
     },
     actions: {
-        async generateToken({ state }) {
-            axios.post("http://localhost:3000/login", {
+        async generateToken({ state, commit }) {
+            await axios.post("http://localhost:3000/login", {
                 login: state.login,
                 password: state.password
             })
                 .then(function (response) {
-                    state.token = response.data.token
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        },
-        async initializeLogin({ state }) {
-            axios.get("http://localhost:3000/login", {
-                headers: {
-                    'x-access-token': state.token
-                },
-            })
-                .then((response) => {
-                    state.login = response.data[0].login;
-                    state.password = response.data[0].password;
+                    commit(SET_TOKEN, response.data.token)
                 })
                 .catch(function (error) {
                     console.log(error);
