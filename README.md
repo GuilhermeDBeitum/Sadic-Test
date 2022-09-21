@@ -1,10 +1,11 @@
 # SADIC TEST APP
 
-Nosso aplicativo é para quem gosta de piadas para melhorar o astral. 
-Logo após logarmos, ao acessar a página inicial seu humor esta neutro, continue, você recebe piadas para melhorar esse humor, a cada 20 segundos uma nova piada e uma atualização no seu humor, aproveite o app:
+Nosso aplicativo é para quem gosta de ler piadas para melhorar o astral. 
+Logo após logarmos, ao acessar a página inicial seu humor esta neutro, continue, você recebe piadas para melhorar seu humor. A cada 20 segundos uma nova piada e uma atualização no seu humor. aproveite o app:
 
 <img width="1254" alt="Captura de Tela 2022-09-20 às 22 17 05" src="https://user-images.githubusercontent.com/54703843/191392735-18911276-39c2-48a2-9722-09048e84567b.png">
 
+Desenvolvimento com framework vuetify.
 
 ## Project setup
 
@@ -18,12 +19,11 @@ Logo após logarmos, ao acessar a página inicial seu humor esta neutro, continu
 docker build -t sadic .
 ```
 
-- Agora utilizamos o comando para rubir os containers frontend e backend.
+- Agora utilizamos o comando para subir os containers frontend e backend.
 ```
 
 docker-compose up
 ```
-
 
 # Desafio
 
